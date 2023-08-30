@@ -4,6 +4,7 @@ blurred.png
 edgeDetectedImage.png
 grey.png
 thresholdedImage.png
+triangulatedImage.png
 # Logs
 logs
 *.log

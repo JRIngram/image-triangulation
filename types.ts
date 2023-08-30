@@ -3,6 +3,16 @@ export interface Vertex {
     y: number
 }
 
+export interface Pixel {
+    x: number
+    y: number
+    colour: {
+        r: number
+        g: number
+        b: number
+    }
+}
+
 export class Edge {
     a: Vertex
     b: Vertex
@@ -27,6 +37,13 @@ export class Edge {
         } else {
             return false
         }
+    }
+
+    getEdgeLength (): number {
+        const xLength = Math.abs(this.a.x - this.b.x)
+        const yLength = Math.abs(this.a.y - this.b.y)
+        const length = Math.sqrt(Math.pow(xLength, 2) + Math.pow(yLength, 2))
+        return length
     }
 }
 
@@ -109,6 +126,64 @@ export class Triangle {
         })
 
         if (equalEdges.length === 3) {
+            return true
+        } else {
+            return false
+        }
+    }
+
+    getTriangleArea (): number {
+        // uses Heron's formula to calculate area
+        const edges = this.getTriangleEdges()
+        const edgeLengths = edges.map(edge => edge.getEdgeLength())
+        const a = edgeLengths[0]
+        const b = edgeLengths[1]
+        const c = edgeLengths[2]
+
+        const s = (a + b + c) / 2
+        const area = parseFloat(Math.sqrt(s * (s - a) * (s - b) * (s - c)).toFixed(3))
+
+        return area
+    }
+
+    // Lague method:
+    // Px = Ax + w1(Bx - Ax) + w2(Cx - Ax)
+    // Py = Ay + w1(By - Ay) + w2(Cy - Ay)
+    // w1 = Ax(Cy-Ay) + (Py - Ay)(Cx - Ax) - Px(Cy - Ay)
+    //        / (By - Ay)(Cx - Ax) - (Bx - Ax)(Cy - Ay)
+    // w2 = (Py-Ay - w1(By - Ay))
+    //          / Cy - Ay
+    pointLiesWithinTriangle (point: Vertex): boolean {
+        const { a, b, c } = { a: this.a, b: this.b, c: this.c }
+        // From Sebastian Lague video
+        // todo need to add special case handling:
+        //  1) If the 3 vertices of the triangle are collinear. In this case p can't be inside since the triangle has no area (it's a degenerate triangle). You can determine collinearity by comparing the edge gradient pairs, but note that you have to compare all 3 pairs to handle the case where 2 vertices are on top of each other. Be mindful of floating point precision error and division by zero.
+        //  2) If C.y == A.y. If you rule out collinearity as per special case 1, then simply swap B and C.
+
+        // const weightOne = ((a.x * (c.y - a.y)) + ((point.y - a.y) * (c.x - a.x)) - (point.x * (c.y - a.y))) /
+        //     (((b.y - a.y) * (c.x - a.x)) - ((b.x - a.x) * (c.y - a.y)))
+
+        // const weightTwo = (point.y - a.y - (weightOne * (b.y - a.y))) / (c.y - a.y)
+
+        // console.log(weightOne, weightTwo)
+
+        // if (weightOne >= 0 && weightTwo >= 0 && (weightOne + weightTwo) <= 1) {
+        //     return true
+        // } else {
+        //     return false
+        // }
+
+        // Baeldung area method https://www.baeldung.com/cs/check-if-point-is-in-2d-triangle
+        const area = this.getTriangleArea()
+        const aTriangle = new Triangle(a, b, point)
+        const bTriangle = new Triangle(b, c, point)
+        const cTriangle = new Triangle(c, a, point)
+
+        const aArea = aTriangle.getTriangleArea()
+        const bArea = bTriangle.getTriangleArea()
+        const cArea = cTriangle.getTriangleArea()
+
+        if (area === (aArea + bArea + cArea)) {
             return true
         } else {
             return false

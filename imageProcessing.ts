@@ -1,5 +1,5 @@
 import { Image } from 'image-js'
-import { Vertex } from './types'
+import type { Vertex } from './types'
 
 export const loadImage = async (path: string): Promise<Image> => {
     const image = await Image.load(path)
@@ -75,7 +75,7 @@ export const getEdgeDetectedPixelGrid = async (path: string): Promise<Image> => 
     return thesholdedImage
 }
 
-export const convertPixelGridToVerticies = (pixelGrid: number[][][]) => {
+export const convertPixelGridToVerticies = (pixelGrid: number[][][]): Vertex[] => {
     const verticies: Vertex[] = []
     pixelGrid.forEach((pixelRow, y) => {
         pixelRow.forEach((pixel, x) => {
@@ -89,5 +89,5 @@ export const convertPixelGridToVerticies = (pixelGrid: number[][][]) => {
         })
     })
 
-    return verticies;
+    return verticies
 }
