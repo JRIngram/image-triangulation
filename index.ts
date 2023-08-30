@@ -1,6 +1,6 @@
 import { bowyerWatson } from './triangulation'
-import { getEdgeDetectedPixelGrid, manualThreshold, getPixelGrid, convertPixelGridToVerticies, loadImage } from './imageProcessing'
-import { Triangle, Vertex, Pixel } from './types'
+import { getThresholdedEdgeDetectedImage, getPixelGrid, convertPixelGridToVerticies, loadImage } from './imageProcessing'
+import type { Vertex, Pixel } from './types'
 
 const pointsToTest = [
     { x: 0, y: 1 },
@@ -18,22 +18,22 @@ triangulation.forEach((triangle) => {
     console.log(triangle.getTriangleEdges())
 })
 
-// const firstTriangle = triangulation[0]
-// console.log(firstTriangle)
-// console.log(firstTriangle.getTriangleArea())
-// const testPoint = { x: 1, y: 2 }
-// console.log(firstTriangle.pointLiesWithinTriangle(testPoint))
-
 
 const execute = async (): Promise<void> => {
     const startTime = performance.now()
     console.log('start')
 
     const imagePath = 'testImage.png'
-    const edgeDetectedImage = await getEdgeDetectedPixelGrid(imagePath)
-    const thresholdedImage = await manualThreshold(edgeDetectedImage)
+    const thresholdedImage = await getThresholdedEdgeDetectedImage(imagePath)
     const pixelGrid = getPixelGrid(thresholdedImage)
     const imageEdgeVerticies = convertPixelGridToVerticies(pixelGrid)
+    // add pixels to four corners to ensure whole image is triangulated
+    const { width, height } = thresholdedImage
+    imageEdgeVerticies.push({ x: 0, y: 0 })
+    imageEdgeVerticies.push({ x: width, y: 0 })
+    imageEdgeVerticies.push({ x: 0, y: height })
+    imageEdgeVerticies.push({ x: width, y: height })
+
     const edgeDetectedTriangulation = bowyerWatson(imageEdgeVerticies)
     const originalImage = await loadImage(imagePath)
     const originalImagePixelGrid = getPixelGrid(originalImage)

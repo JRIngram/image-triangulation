@@ -67,12 +67,13 @@ export const manualThreshold = async (image: Image): Promise<Image> => {
     return image
 }
 
-export const getEdgeDetectedPixelGrid = async (path: string): Promise<Image> => {
+export const getThresholdedEdgeDetectedImage = async (path: string): Promise<Image> => {
     const image = await loadImage(path)
     const blurredImage = await blurImage(image)
     const greyedImage = await greyscaleImage(blurredImage)
-    const thesholdedImage = await edgeDetect(greyedImage)
-    return thesholdedImage
+    const edgeDetectedImage = await edgeDetect(greyedImage)
+    const thresholdedImage = await manualThreshold(edgeDetectedImage)
+    return thresholdedImage
 }
 
 export const convertPixelGridToVerticies = (pixelGrid: number[][][]): Vertex[] => {
