@@ -1,5 +1,9 @@
 .vscode
 testImage.png
+blurred.png
+edgeDetectedImage.png
+grey.png
+thresholdedImage.png
 # Logs
 logs
 *.log
