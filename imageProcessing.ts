@@ -67,12 +67,71 @@ export const manualThreshold = async (image: Image): Promise<Image> => {
     return image
 }
 
+export const niblackThreshold = async (greyscaledImage: Image): Promise<Image> => {
+    const t1 = performance.now()
+    console.log('Starting niblack thresholding')
+    const { height, width } = greyscaledImage
+    const k = 1
+    const pixelGrid = getPixelGrid(greyscaledImage)
+    const getNeighbouringPixelsAtXY = (x: number, y: number, neighbourhoodSize: number): number[] => {
+        const pixelNeighbourhood: number[][] = []
+        const yRange = [y - neighbourhoodSize, y + neighbourhoodSize]
+        const xRange = [x - neighbourhoodSize, x + neighbourhoodSize]
+        for (let y = yRange[0]; y < yRange[1]; y++) {
+            const pixelRow: number[] = []
+            for (let x = xRange[0]; x <= xRange[1]; x++) {
+                if (xRange[0] < 0 || yRange[0] < 0 || xRange[1] >= width || yRange[1] >= height) {
+                    pixelRow.push(0)
+                } else {
+                    pixelRow.push(pixelGrid[y][x][0])
+                }
+            }
+
+            pixelNeighbourhood.push(pixelRow)
+        }
+
+        return pixelNeighbourhood.flat()
+    }
+
+    pixelGrid.forEach((pixelRow, y) => {
+        pixelRow.forEach((pixel, x) => {
+            const neighbourhood = getNeighbouringPixelsAtXY(x, y, 3)
+            const summedIntensity = neighbourhood.reduce((sum, pixel) => sum + pixel) // changed to appease linter
+            const meanIntensity = summedIntensity / neighbourhood.length
+            const standardDeviation = (): number => {
+                const variances = neighbourhood.map((pixel) => Math.pow(pixel - meanIntensity, 2))
+                const summedVariances = variances.reduce((sum, variance) => sum + variance) // changed to appease linter
+                const variance = summedVariances / neighbourhood.length
+                const standardDeviation = Math.sqrt(variance)
+                return standardDeviation
+            }
+
+            const threshold = meanIntensity + (k * standardDeviation())
+
+            // in niblack, below threshold is considered foreground
+            if (pixel[0] < threshold) {
+                greyscaledImage.setPixelXY(x, y, [0, 0, 0])
+            } else {
+                greyscaledImage.setPixelXY(x, y, [255, 255, 255])
+            }
+        })
+    })
+
+    await greyscaledImage.save('niblackedImage.png')
+    const t2 = performance.now()
+    const timeTaken = t2 - t1
+    console.log(`niblack complete. Time taken: ${timeTaken}ms OR ${(timeTaken / 1000) / 60}mins`)
+    return greyscaledImage
+}
+
 export const getThresholdedEdgeDetectedImage = async (path: string): Promise<Image> => {
     const image = await loadImage(path)
     const blurredImage = await blurImage(image)
     const greyedImage = await greyscaleImage(blurredImage)
     const edgeDetectedImage = await edgeDetect(greyedImage)
-    const thresholdedImage = await manualThreshold(edgeDetectedImage)
+    // const thresholdedImage = await manualThreshold(edgeDetectedImage)
+    const thresholdedImage = await niblackThreshold(edgeDetectedImage)
+    console.log('initial pipeline complete')
     return thresholdedImage
 }
 

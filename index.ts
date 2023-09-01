@@ -2,29 +2,13 @@ import { bowyerWatson } from './triangulation'
 import { getThresholdedEdgeDetectedImage, getPixelGrid, convertPixelGridToVerticies, loadImage } from './imageProcessing'
 import type { Vertex, Pixel } from './types'
 
-const pointsToTest = [
-    { x: 0, y: 1 },
-    { x: 0, y: 3 },
-    { x: 3, y: 3 },
-    { x: 3, y: 1 },
-    { x: 2, y: 4 },
-    { x: 4, y: 2 }
-]
-
-const triangulation = bowyerWatson(pointsToTest)
-console.log('*****')
-console.log('RESULT')
-triangulation.forEach((triangle) => {
-    console.log(triangle.getTriangleEdges())
-})
-
-
 const execute = async (): Promise<void> => {
     const startTime = performance.now()
     console.log('start')
 
     const imagePath = 'testImage.png'
     const thresholdedImage = await getThresholdedEdgeDetectedImage(imagePath)
+    console.log('starting triangulation')
     const pixelGrid = getPixelGrid(thresholdedImage)
     const imageEdgeVerticies = convertPixelGridToVerticies(pixelGrid)
     // add pixels to four corners to ensure whole image is triangulated
@@ -49,7 +33,6 @@ const execute = async (): Promise<void> => {
 
         originalImagePixelGrid.forEach((pixelRow, y) => {
             pixelRow.forEach((pixel, x) => {
-                // console.log(pixel)
                 const pixelCoorindates = { x, y }
                 const pixelIsInTriangle = triangle.pointLiesWithinTriangle(pixelCoorindates)
                 if (pixelIsInTriangle) {
@@ -64,6 +47,7 @@ const execute = async (): Promise<void> => {
                 }
             })
         })
+
         const pixelsInTriangleCount = pixelCoordinatesInTriangle.length
         const averageRGBValue = {
             r: summedRGBValue[0] / pixelsInTriangleCount,
@@ -80,8 +64,6 @@ const execute = async (): Promise<void> => {
         })
 
         averagedPixelList.push(...averagedPixelsInTriangle)
-
-        // console.log(averageRGBValue)
     })
 
     // for each point change the colour to that average value
@@ -92,7 +74,7 @@ const execute = async (): Promise<void> => {
 
     await originalImage.save('triangulatedImage.png')
 
-    console.log(`fin. Took ${performance.now() - startTime}ms to run`)
+    console.log(`fin. Took ${performance.now() - startTime}ms / ${((performance.now() - startTime) / 1000) / 60} minutes to run`)
 }
 
 execute().catch((err) => {
