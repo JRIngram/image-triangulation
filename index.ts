@@ -2,7 +2,7 @@ import { bowyerWatson } from './triangulation'
 import { getThresholdedEdgeDetectedImage, getPixelGrid, convertPixelGridToVerticies, loadImage } from './imageProcessing'
 import type { Vertex, Pixel, PixelInTriangle } from './types'
 
-const execute = async (): Promise<void> => {
+const triangulateImage = async (): Promise<void> => {
     const startTime = performance.now()
     console.log('start')
 
@@ -105,6 +105,6 @@ const execute = async (): Promise<void> => {
     console.log(`fin. Took ${performance.now() - startTime}ms / ${((performance.now() - startTime) / 1000) / 60} minutes to run`)
 }
 
-execute().catch((err) => {
+triangulateImage().catch((err) => {
     console.log(err)
 })
