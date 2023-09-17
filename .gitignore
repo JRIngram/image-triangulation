@@ -5,6 +5,8 @@ edgeDetectedImage.png
 grey.png
 thresholdedImage.png
 triangulatedImage.png
+niblackedimage.png
+results.txt
 # Logs
 logs
 *.log

@@ -1,6 +1,6 @@
 import { bowyerWatson } from './triangulation'
 import { getThresholdedEdgeDetectedImage, getPixelGrid, convertPixelGridToVerticies, loadImage } from './imageProcessing'
-import type { Vertex, Pixel } from './types'
+import type { Vertex, Pixel, PixelInTriangle } from './types'
 
 const execute = async (): Promise<void> => {
     const startTime = performance.now()
@@ -9,6 +9,7 @@ const execute = async (): Promise<void> => {
     const imagePath = 'testImage.png'
     const thresholdedImage = await getThresholdedEdgeDetectedImage(imagePath)
     console.log('starting triangulation')
+    const t1 = performance.now()
     const pixelGrid = getPixelGrid(thresholdedImage)
     const imageEdgeVerticies = convertPixelGridToVerticies(pixelGrid)
     // add pixels to four corners to ensure whole image is triangulated
@@ -19,6 +20,10 @@ const execute = async (): Promise<void> => {
     imageEdgeVerticies.push({ x: width, y: height })
 
     const edgeDetectedTriangulation = bowyerWatson(imageEdgeVerticies)
+    const t2 = performance.now()
+    const timeTaken = t2 - t1
+    console.log(`Delauny triangulation complete. Time taken: ${timeTaken}ms OR ${(timeTaken / 1000) / 60}mins`)
+    console.log('applying trinagulation to image')
     const originalImage = await loadImage(imagePath)
     const originalImagePixelGrid = getPixelGrid(originalImage)
 
@@ -26,26 +31,49 @@ const execute = async (): Promise<void> => {
     // for each triangle, determine if all points are within the triangle
     // calculate the average R,G and B value for each point within the triangle from the original image
     // add average RGB to a list of pixels with the coords
+    const pixelCoordinateGrid: PixelInTriangle[] = originalImagePixelGrid.flatMap((pixelRow, y) => {
+        return pixelRow.map((pixel, x) => {
+            const coordinatedPixel = {
+                x,
+                y,
+                colour: {
+                    r: pixel[0],
+                    g: pixel[1],
+                    b: pixel[2]
+                }
+            }
+
+            return {
+                pixel: coordinatedPixel,
+                triangleId: -1
+            }
+        })
+    })
+
     const averagedPixelList: Pixel[] = []
-    edgeDetectedTriangulation.forEach((triangle) => {
+
+    edgeDetectedTriangulation.forEach((triangle, triangleMeshIndex) => {
         const summedRGBValue: number[] = [0, 0, 0]
         const pixelCoordinatesInTriangle: Vertex[] = []
 
-        originalImagePixelGrid.forEach((pixelRow, y) => {
-            pixelRow.forEach((pixel, x) => {
+        pixelCoordinateGrid.forEach((pixelWithTriangleId) => {
+            const { triangleId } = pixelWithTriangleId
+            if (triangleId === -1) {
+                const { pixel } = pixelWithTriangleId
+                const { x, y } = pixel
                 const pixelCoorindates = { x, y }
                 const pixelIsInTriangle = triangle.pointLiesWithinTriangle(pixelCoorindates)
+
                 if (pixelIsInTriangle) {
                     pixelCoordinatesInTriangle.push(pixelCoorindates)
-                    const r = pixel[0]
-                    const g = pixel[1]
-                    const b = pixel[2]
+                    pixelWithTriangleId.triangleId = triangleMeshIndex
+                    const { colour } = pixel
 
-                    summedRGBValue[0] += r
-                    summedRGBValue[1] += g
-                    summedRGBValue[2] += b
+                    summedRGBValue[0] += colour.r
+                    summedRGBValue[1] += colour.g
+                    summedRGBValue[2] += colour.b
                 }
-            })
+            }
         })
 
         const pixelsInTriangleCount = pixelCoordinatesInTriangle.length

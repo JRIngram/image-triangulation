@@ -13,6 +13,11 @@ export interface Pixel {
     }
 }
 
+export interface PixelInTriangle {
+    pixel: Pixel
+    triangleId: number
+}
+
 export class Edge {
     a: Vertex
     b: Vertex
