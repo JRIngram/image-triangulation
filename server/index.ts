@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
         file,
         callback
     ) => {
-        callback(null, file.originalname)
+        callback(null, `${Date.now()}-${file.originalname}`)
     }
 })
 
@@ -34,7 +34,7 @@ app.get('/', (req, res) => {
 
 app.post('/', upload.single('image'), (req, res) => {
     console.log('request got')
-    console.log(`file name: ${JSON.stringify(req.file)}`)
+    console.log(`file name: ${req.file?.filename}`)
     res.json({ success: true }).status(200)
 })
 
