@@ -27,7 +27,10 @@ export const bowyerWatson = (pointList: Vertex[]): Triangle[] => {
     const supertriangle = createSupertriangle(pointList)
     let triangulation: Triangle[] = [supertriangle]
 
-    pointList.forEach((point) => {
+    pointList.forEach((point, pointIndex) => {
+        if(pointIndex % 10 === 0 ){
+            console.log(`point ${pointIndex} of ${pointList.length}`)
+        }
         const badTriangles: Triangle[] = [] // a set of bad triangles
 
         triangulation.forEach((triangle) => {

@@ -2,14 +2,17 @@ import { bowyerWatson } from './triangulation'
 import { getThresholdedEdgeDetectedImage, getPixelGrid, convertPixelGridToVerticies, loadImage } from './imageProcessing'
 import type { Vertex, Pixel, PixelInTriangle } from './types'
 
-export const triangulateImage = async (): Promise<void> => {
+export const triangulateImage = async (imagePath: string): Promise<void> => {
     const startTime = performance.now()
     console.log('start')
 
-    const imagePath = 'testImage.png'
-    const thresholdedImage = await getThresholdedEdgeDetectedImage(imagePath)
+    const fullPath = `files/${imagePath}`
+
+    const thresholdedImage = await getThresholdedEdgeDetectedImage(fullPath)
     console.log('starting triangulation')
+    console.log('getting pixel grid');
     const pixelGrid = getPixelGrid(thresholdedImage)
+    console.log('Converting to verticies');
     const imageEdgeVerticies = convertPixelGridToVerticies(pixelGrid)
     // add pixels to four corners to ensure whole image is triangulated
     const { width, height } = thresholdedImage
@@ -17,11 +20,11 @@ export const triangulateImage = async (): Promise<void> => {
     imageEdgeVerticies.push({ x: width, y: 0 })
     imageEdgeVerticies.push({ x: 0, y: height })
     imageEdgeVerticies.push({ x: width, y: height })
-
+    console.log('performing bowyer-watson')
     const edgeDetectedTriangulation = bowyerWatson(imageEdgeVerticies)
     const t2 = performance.now()
     console.log('applying trinagulation to image')
-    const originalImage = await loadImage(imagePath)
+    const originalImage = await loadImage(fullPath)
     const originalImagePixelGrid = getPixelGrid(originalImage)
 
     // create averagedPixelList = []
@@ -48,9 +51,12 @@ export const triangulateImage = async (): Promise<void> => {
     })
 
     const averagedPixelList: Pixel[] = []
-    console.log("triangle count: ", edgeDetectedTriangulation.length);
+    console.log('triangle count: ', edgeDetectedTriangulation.length)
 
     edgeDetectedTriangulation.forEach((triangle, triangleMeshIndex) => {
+        if(triangleMeshIndex % 10 === 0 ){
+            console.log(`triangle ${triangleMeshIndex} of ${edgeDetectedTriangulation.length}`)
+        }
         const summedRGBValue: number[] = [0, 0, 0]
         const pixelCoordinatesInTriangle: Vertex[] = []
 
@@ -98,7 +104,7 @@ export const triangulateImage = async (): Promise<void> => {
         originalImage.setPixelXY(pixel.x, pixel.y, [r, g, b])
     })
 
-    await originalImage.save('triangulatedImage.png')
+    await originalImage.save(`files/triangulated-${imagePath}.png`)
 
     console.log(`fin. Took ${performance.now() - startTime}ms / ${((performance.now() - startTime) / 1000) / 60} minutes to run`)
 }

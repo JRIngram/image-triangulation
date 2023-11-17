@@ -5,7 +5,7 @@
         "node": true
     },
     "extends": [
-        "plugin:react/recommended",
+        "eslint:recommended",
         "standard-with-typescript"
     ],
     "overrides": [
