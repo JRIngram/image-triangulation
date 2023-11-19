@@ -31,7 +31,7 @@ export default function Home() {
       const formData = new FormData();
       formData.append("image", imageFile);
       setIsUploading(true);
-      await fetch("http://localhost:3001/", {
+      await fetch("http://localhost:3001/image", {
         method: "post",
         body: formData,
       });

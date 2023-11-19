@@ -23,13 +23,13 @@ export const getPixelGrid = (image: Image): number[][][] => {
 
 export const blurImage = async (image: Image): Promise<Image> => {
     const blurredImage = image.blurFilter()
-    await blurredImage.save('blurred.png')
+    await blurredImage.save('files/blurred.png')
     return blurredImage
 }
 
 export const greyscaleImage = async (image: Image): Promise<Image> => {
     const greyImage = image.grey()
-    await greyImage.save('grey.png')
+    await greyImage.save('files/grey.png')
 
     return greyImage
 }
@@ -37,7 +37,7 @@ export const greyscaleImage = async (image: Image): Promise<Image> => {
 export const edgeDetect = async (image: Image): Promise<Image> => {
     try {
         const edgeDetectedImage = image.sobelFilter()
-        await edgeDetectedImage.save('edgeDetectedImage.png')
+        await edgeDetectedImage.save('files/edgeDetectedImage.png')
         return edgeDetectedImage
     } catch (err) {
         console.log('error during edge detection')
@@ -96,7 +96,7 @@ export const niblackThreshold = async (greyscaledImage: Image): Promise<Image> =
         })
     })
 
-    await greyscaledImage.save('niblackedImage.png')
+    await greyscaledImage.save('files/niblackedImage.png')
     const t2 = performance.now()
     const timeTaken = t2 - t1
     console.log(`niblack complete. Time taken: ${timeTaken}ms OR ${(timeTaken / 1000) / 60}mins`)

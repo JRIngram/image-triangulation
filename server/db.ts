@@ -2,7 +2,7 @@ import sqlite3 from "sqlite3";
 import { open } from "sqlite";
 import type { Database } from "sqlite";
 
-enum Status {
+export enum Status {
   UPLOADED = "UPLOADED",
   PENDING = "PENDING",
   ERROR = "ERROR",
@@ -15,11 +15,6 @@ type Image = {
   triangulatedPath: string;
   status: Status;
   triangulationProgress: number;
-};
-
-type ImageIdWithStatus = {
-  id: number;
-  status: Status;
 };
 
 export const openDb = async () => {
@@ -57,26 +52,6 @@ export const insertImage = async (filePath: string) => {
   await db.close();
 };
 
-export const getImageById = async (imageId: string) => {
-  const db = await openDb();
-
-  const res = await db.get(`SELECT * FROM images WHERE id = ?`, [imageId]);
-
-  await db.close();
-
-  const { id, originalPath, triangulatedPath, status, triangulationProgress } = res;
-
-  const image: Image = {
-    id,
-    originalPath,
-    triangulatedPath,
-    status,
-    triangulationProgress,
-  };
-
-  return image;
-};
-
 export const getMostRecentImage = async () => {
   let latestImage = {
     id: -1,
@@ -99,3 +74,41 @@ export const getMostRecentImage = async () => {
 
   return latestImage;
 };
+
+export const getImageById = async (imageId: string) => {
+  const db = await openDb();
+
+  const res = await db.get(`SELECT * FROM images WHERE id = ?`, [imageId]);
+
+  await db.close();
+
+  const { id, originalPath, triangulatedPath, status, triangulationProgress } = res;
+
+  const image: Image = {
+    id,
+    originalPath,
+    triangulatedPath,
+    status,
+    triangulationProgress,
+  };
+
+  return image;
+};
+
+export const updateImageStatus = async (id: string, status: Status) => {
+  const db = await openDb();
+  await db.run(`UPDATE images SET status = ? WHERE id = ?`, [status, id]);
+  await db.close();
+}
+
+export const updateImageTriangulationProgress = async (imageId: string, progress: number) => {
+  const db = await openDb();
+  await db.get(`UPDATE images SET triangulationProgress = ? WHERE id = ?`, [progress, imageId]);
+  await db.close();
+}
+
+export const updateImageToComplete = async (imageId: string) => {
+  const db = await openDb();
+  await db.get(`UPDATE images SET triangulationProgress = 100, status = ? WHERE id = ?`, [Status.COMPLETE, imageId]);
+  await db.close();
+}
