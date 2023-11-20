@@ -53,7 +53,7 @@ app.put("/image/:id", async (req, res) => {
   const { originalPath, status } = image;
 
   const worker = new Worker("./worker.ts", {
-    argv: ["testImage.png", id],
+    argv: [originalPath, id],
     execArgv: ["--require", "ts-node/register"],
   });
 
@@ -76,7 +76,7 @@ app.get("/image/:id", upload.single("image"), async (req, res) => {
   const { status, triangulationProgress, triangulatedPath } = image;
   if (status === Status.COMPLETE) {
     return res
-      .json({ success: true, triangulatedPath, imageStatus: status })
+      .json({ success: true, triangulatedPath, triangulationProgress, imageStatus: status })
       .status(200);
   }
   return res

@@ -8,6 +8,7 @@ triangulatedImage.png
 niblackedimage.png
 results.txt
 server/files/*
+server/tmp/*
 # Logs
 logs
 *.log
