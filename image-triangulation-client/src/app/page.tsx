@@ -16,6 +16,8 @@ export default function Home() {
     useState<TriangulationStatus>(TriangulationStatus.NOT_STARTED);
   const [imageId, setImageId] = useState<number>(-1);
   const [triangulationProgress, setTriangulationProgress] = useState<number>(0);
+  const [blurRadius, setBlurRadius] = useState<number>(1);
+  const [niblackK, setNiblackK] = useState<number>(1);
 
   useEffect(() => {
     if (triangulationStatus === TriangulationStatus.UPLOADED) {
@@ -75,20 +77,35 @@ export default function Home() {
   };
 
   return (
-    <main>
+    <main className={styles.appContainer}>
       <Box width={"md"} marginX={"2rem"}>
         <Heading>Image Triangulation</Heading>
-        {!imageFile && (
-          <Text>Please select a .jpg or .png image to upload.</Text>
-        )}
-
         {triangulationStatus === TriangulationStatus.NOT_STARTED ? (
           <>
+            <Text>Please select a .jpg or .png image to upload.</Text>
             <Flex width="100%" height="4rem" justifyContent="center">
               <FileUpload
                 onChangeHandler={(event) => fileChangeHandler(event)}
               />
             </Flex>
+            <ParameterSlider
+              name="blurRadius"
+              value={blurRadius}
+              min={1}
+              max={10}
+              defaultValue={1}
+              step={1}
+              onChange={(val) => setBlurRadius(val)}
+            />
+            <ParameterSlider
+              name="Niblack K"
+              value={niblackK}
+              min={-2}
+              max={2}
+              defaultValue={0}
+              step={0.1}
+              onChange={(val) => setNiblackK(val)}
+            />
             <Button
               marginY="4"
               width={"100%"}

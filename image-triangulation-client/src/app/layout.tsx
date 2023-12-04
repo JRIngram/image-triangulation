@@ -1,5 +1,6 @@
-import React from "react";
+import styles from './page.module.css'
 
+import React from "react";
 import { Providers } from "./providers";
 
 export default function RootLayout({
@@ -9,7 +10,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      <body className={styles.body}>
         <Providers>{children}</Providers>
       </body>
     </html>
