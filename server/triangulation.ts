@@ -8,17 +8,23 @@ const createSupertriangle = (vertices: Vertex[]): Triangle => {
     let maxY = 0
 
     vertices.forEach((vertex) => {
+        console.log(vertex)
         minX = vertex.x < minX ? vertex.x : minX
         maxX = vertex.x > maxX ? vertex.x : maxX
         minY = vertex.y < minY ? vertex.y : minY
-        maxY = vertex.y > maxX ? vertex.y : maxY
+        maxY = vertex.y > maxY ? vertex.y : maxY
     })
+
+    console.log({ minX, maxX, minY, maxY})
 
     const supertriangle = new Triangle(
         { x: -maxX * 10, y: -maxY * 10 },
         { x: (maxX * 10 + -maxX * 10) / 2, y: maxY * 10 },
         { x: maxX * 10, y: -maxY * 10 }
     )
+
+    
+    console.log('supertriangle', {supertriangle})
 
     return supertriangle
 }
