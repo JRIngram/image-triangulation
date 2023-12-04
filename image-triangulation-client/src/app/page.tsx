@@ -1,19 +1,14 @@
 "use client";
 import styles from "./page.module.css";
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import { Box, Button, Flex, Heading, Text } from "@chakra-ui/react";
 
 import { FileUpload } from "@/components/FileUpload/FileUpload";
 import { TriangulationStatus } from "../types";
 import { TriangulationProgress } from "@/components/TriangulationProgress/TriangulationProgress";
-import {
-  getImage,
-  getTriangulationStatus,
-  postImage,
-  triggerTriangulation,
-} from "./api";
-import { ImageError } from "next/dist/server/image-optimizer";
+import { getTriangulationStatus, postImage, triggerTriangulation } from "./api";
+import { BeforeAfterImages } from "@/components/BeforeAfterImages/BeforeAfterImages";
+// import { ParameterSlider } from "@/components/ParameterSlider/ParameterSlider";
 
 export default function Home() {
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -40,12 +35,6 @@ export default function Home() {
           imageStatus === TriangulationStatus.ERROR
         ) {
           setTrainagulationStatus(imageStatus);
-
-          if (imageStatus === TriangulationStatus.COMPLETE) {
-            console.log("yay complete");
-            // display image
-            await getImage(imageId);
-          }
         } else {
           setTriangulationProgress(responseJson.triangulationProgress);
           setTimeout(pollServer, 5000);
@@ -57,12 +46,9 @@ export default function Home() {
   }, [triangulationStatus]);
 
   const fileChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!event.target.files) {
-      console.log("no file selected");
-      return;
+    if (event.target.files) {
+      setImageFile(event.target.files[0]);
     }
-    console.log(event.target.files[0]);
-    setImageFile(event.target.files[0]);
   };
 
   const uploadFile = async () => {
@@ -78,8 +64,6 @@ export default function Home() {
       } catch (err) {
         setTrainagulationStatus(TriangulationStatus.ERROR);
       }
-    } else {
-      console.log("Image is null");
     }
   };
 
@@ -118,17 +102,14 @@ export default function Home() {
           </>
         ) : (
           <>
-            <TriangulationProgress
-              status={triangulationStatus}
-              progress={triangulationProgress}
-            />
-            {triangulationStatus === TriangulationStatus.COMPLETE && (
-              <Image
-                src={`http://localhost:3001/image/${imageId}`}
-                alt="The triangulated image"
-                width={500}
-                height={500}
+            {triangulationStatus !== TriangulationStatus.COMPLETE && (
+              <TriangulationProgress
+                status={triangulationStatus}
+                progress={triangulationProgress}
               />
+            )}
+            {triangulationStatus === TriangulationStatus.COMPLETE && (
+              <BeforeAfterImages imageId={imageId} />
             )}
             <Button
               marginY="4"

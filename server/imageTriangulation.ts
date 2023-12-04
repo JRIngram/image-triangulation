@@ -51,7 +51,6 @@ export const triangulateImage = async (
   // add average RGB to a list of pixels with the coords
   const pixelCoordinateGrid: PixelInTriangle[] = originalImagePixelGrid.flatMap(
     (pixelRow, y) => {
-      console.log(y);
       return pixelRow.map((pixel, x) => {
         const coordinatedPixel = {
           x,
@@ -138,7 +137,7 @@ export const triangulateImage = async (
 
   const triangulationPath = `triangulated-${imagePath}`;
   await originalImage.save(`files/${triangulationPath}`);
-  await updateImageTriangulationPath(id, triangulationPath)
+  await updateImageTriangulationPath(id, triangulationPath);
 
   console.log(
     `fin. Took ${performance.now() - startTime}ms / ${
@@ -146,5 +145,5 @@ export const triangulateImage = async (
     } minutes to run`
   );
 
-  await updateProgressCallback(100)
+  await updateProgressCallback(100);
 };

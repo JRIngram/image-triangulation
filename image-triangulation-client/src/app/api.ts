@@ -9,8 +9,13 @@ export const triggerTriangulation = async (imageId: number) =>
     method: "put",
   });
 
-export const getImage = async (imageId: number) =>
-  await fetch(`http://localhost:3001/image/${imageId}`, {
+export const getOriginalImage = async (imageId: number) =>
+  await fetch(`http://localhost:3001/image/${imageId}/original`, {
+    method: "get",
+  });
+
+export const getTriangulatedImage = async (imageId: number) =>
+  await fetch(`http://localhost:3001/image/${imageId}/triangulated`, {
     method: "get",
   });
 

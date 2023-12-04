@@ -71,21 +71,29 @@ app.put("/image/:id", async (req, res) => {
   res.json({ success: true, imageStatus: status }).status(200);
 });
 
-app.get("/image/:id", async (req, res) => {
+app.get("/image/:id/original", async (req, res) => {
   const imageId = req.params.id;
   const image = await getImageById(imageId);
-  const { id, originalPath, triangulatedPath, triangulationProgress, status } =
-    image;
+  const { originalPath } = image;
+  console.log("getting original");
+  console.log({ originalPath });
+  const absolutePath = path.join(__dirname, "files", originalPath);
+
+  return res.sendFile(absolutePath);
+});
+
+app.get("/image/:id/triangulated", async (req, res) => {
+  const imageId = req.params.id;
+  const image = await getImageById(imageId);
+  const { triangulatedPath, status } = image;
 
   if (status !== Status.COMPLETE) {
     return res.json({}).status(404);
   }
 
-  const imagePath = triangulatedPath;
-  console.log({ image });
-  console.log({ dir: __dirname, file: "files", triangulatedPath });
-  const absolutePath = path.join(__dirname, "files", imagePath);
-  console.log(absolutePath);
+  console.log("getting triangulated");
+  console.log({ triangulatedPath });
+  const absolutePath = path.join(__dirname, "files", triangulatedPath);
 
   return res.sendFile(absolutePath);
 });
