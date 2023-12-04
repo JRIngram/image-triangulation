@@ -22,7 +22,7 @@ export const getPixelGrid = (image: Image): number[][][] => {
 }
 
 export const blurImage = async (image: Image): Promise<Image> => {
-    const blurredImage = image.blurFilter()
+    const blurredImage = image.blurFilter({radius: 1});
     await blurredImage.save('files/blurred.png')
     return blurredImage
 }

@@ -12,6 +12,7 @@ import {
   updateImageTriangulationProgress,
 } from "./db";
 import { Worker } from "node:worker_threads";
+import path from "node:path";
 
 const app = express();
 const port = 3001;
@@ -70,15 +71,29 @@ app.put("/image/:id", async (req, res) => {
   res.json({ success: true, imageStatus: status }).status(200);
 });
 
-app.get("/image/:id", upload.single("image"), async (req, res) => {
+app.get("/image/:id", async (req, res) => {
+  const imageId = req.params.id;
+  const image = await getImageById(imageId);
+  const { id, originalPath, triangulatedPath, triangulationProgress, status } =
+    image;
+
+  if (status !== Status.COMPLETE) {
+    return res.json({}).status(404);
+  }
+
+  const imagePath = triangulatedPath;
+  console.log({ image });
+  console.log({ dir: __dirname, file: "files", triangulatedPath });
+  const absolutePath = path.join(__dirname, "files", imagePath);
+  console.log(absolutePath);
+
+  return res.sendFile(absolutePath);
+});
+
+app.get("/image/:id/status", async (req, res) => {
   const id = req.params.id;
   const image = await getImageById(id);
-  const { status, triangulationProgress, triangulatedPath } = image;
-  if (status === Status.COMPLETE) {
-    return res
-      .json({ success: true, triangulatedPath, triangulationProgress, imageStatus: status })
-      .status(200);
-  }
+  const { status, triangulationProgress } = image;
   return res
     .json({ success: true, triangulationProgress, imageStatus: status })
     .status(200);

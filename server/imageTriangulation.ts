@@ -6,8 +6,10 @@ import {
   loadImage,
 } from "./imageProcessing";
 import type { Vertex, Pixel, PixelInTriangle } from "./types";
+import { updateImageTriangulationPath } from "./db";
 
 export const triangulateImage = async (
+  id: string,
   imagePath: string,
   updateProgressCallback: (progress: number) => Promise<void> | void
 ): Promise<void> => {
@@ -134,7 +136,9 @@ export const triangulateImage = async (
     originalImage.setPixelXY(pixel.x, pixel.y, [r, g, b]);
   });
 
-  await originalImage.save(`files/triangulated-${imagePath}.png`);
+  const triangulationPath = `triangulated-${imagePath}`;
+  await originalImage.save(`files/${triangulationPath}`);
+  await updateImageTriangulationPath(id, triangulationPath)
 
   console.log(
     `fin. Took ${performance.now() - startTime}ms / ${

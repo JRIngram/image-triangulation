@@ -1,12 +1,19 @@
 "use client";
-import { useEffect, useState } from "react";
 import styles from "./page.module.css";
+import { useEffect, useState } from "react";
+import Image from "next/image";
 import { Box, Button, Flex, Heading, Text } from "@chakra-ui/react";
 
 import { FileUpload } from "@/components/FileUpload/FileUpload";
 import { TriangulationStatus } from "../types";
 import { TriangulationProgress } from "@/components/TriangulationProgress/TriangulationProgress";
-import { getTriangulationStatus, postImage, triggerTriangulation } from "./api";
+import {
+  getImage,
+  getTriangulationStatus,
+  postImage,
+  triggerTriangulation,
+} from "./api";
+import { ImageError } from "next/dist/server/image-optimizer";
 
 export default function Home() {
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -33,6 +40,12 @@ export default function Home() {
           imageStatus === TriangulationStatus.ERROR
         ) {
           setTrainagulationStatus(imageStatus);
+
+          if (imageStatus === TriangulationStatus.COMPLETE) {
+            console.log("yay complete");
+            // display image
+            await getImage(imageId);
+          }
         } else {
           setTriangulationProgress(responseJson.triangulationProgress);
           setTimeout(pollServer, 5000);
@@ -52,7 +65,7 @@ export default function Home() {
     setImageFile(event.target.files[0]);
   };
 
-  const fileUpload = async () => {
+  const uploadFile = async () => {
     if (imageFile) {
       const formData = new FormData();
       formData.append("image", imageFile);
@@ -68,6 +81,13 @@ export default function Home() {
     } else {
       console.log("Image is null");
     }
+  };
+
+  const resetState = () => {
+    setImageFile(null);
+    setTrainagulationStatus(TriangulationStatus.NOT_STARTED);
+    setImageId(-1);
+    setTriangulationProgress(0);
   };
 
   return (
@@ -90,17 +110,37 @@ export default function Home() {
               width={"100%"}
               background="teal.500"
               color={"white"}
-              onClick={() => fileUpload()}
+              onClick={() => uploadFile()}
               isDisabled={!imageFile ? true : false}
             >
               Upload
             </Button>
           </>
         ) : (
-          <TriangulationProgress
-            status={triangulationStatus}
-            progress={triangulationProgress}
-          />
+          <>
+            <TriangulationProgress
+              status={triangulationStatus}
+              progress={triangulationProgress}
+            />
+            {triangulationStatus === TriangulationStatus.COMPLETE && (
+              <Image
+                src={`http://localhost:3001/image/${imageId}`}
+                alt="The triangulated image"
+                width={500}
+                height={500}
+              />
+            )}
+            <Button
+              marginY="4"
+              width={"100%"}
+              background="teal.500"
+              color={"white"}
+              onClick={() => resetState()}
+              isDisabled={!imageFile ? true : false}
+            >
+              Reset
+            </Button>
+          </>
         )}
       </Box>
     </main>

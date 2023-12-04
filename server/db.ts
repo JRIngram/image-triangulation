@@ -107,6 +107,12 @@ export const updateImageTriangulationProgress = async (imageId: string, progress
   await db.close();
 }
 
+export const updateImageTriangulationPath = async (imageId: string, path: string) => {
+  const db = await openDb();
+  await db.get(`UPDATE images SET triangulatedPath = ? WHERE id = ?`, [path, imageId]);
+  await db.close();
+}
+
 export const updateImageToComplete = async (imageId: string) => {
   const db = await openDb();
   await db.get(`UPDATE images SET triangulationProgress = 100, status = ? WHERE id = ?`, [Status.COMPLETE, imageId]);

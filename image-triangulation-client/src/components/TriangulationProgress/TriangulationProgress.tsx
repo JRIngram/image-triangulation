@@ -9,9 +9,8 @@ type Props = {
 export const TriangulationProgress = ({ status, progress }: Props) => {
   switch (status) {
     case TriangulationStatus.UPLOADING:
-      return <Spinner emptyColor="gray.200" color="teal.300" marginY="1rem" />;
     case TriangulationStatus.UPLOADED:
-      return <Text>Upload Completed</Text>;
+      return <Spinner emptyColor="gray.200" color="teal.300" marginY="1rem" />;
     case TriangulationStatus.PENDING:
       return (
         <>
@@ -25,7 +24,9 @@ export const TriangulationProgress = ({ status, progress }: Props) => {
           />
         </>
       );
-    default:
+    case TriangulationStatus.COMPLETE:
       return <Text>Triangulation Completed</Text>;
+    default:
+      return <Text>Unexpected error during triangulation</Text>;
   }
 };
