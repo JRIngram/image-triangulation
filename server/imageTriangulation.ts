@@ -4,6 +4,7 @@ import {
   getPixelGrid,
   convertPixelGridToVerticies,
   loadImage,
+  removeProcessingPipelineImages,
 } from "./imageProcessing";
 import type { Vertex, Pixel, PixelInTriangle } from "./types";
 import { updateImageTriangulationPath } from "./db";
@@ -142,6 +143,7 @@ export const triangulateImage = async (
   const triangulationPath = `${id}-triangulated.png`;
   await originalImage.save(`files/${triangulationPath}`);
   await updateImageTriangulationPath(id, triangulationPath);
+  removeProcessingPipelineImages(id)
 
   console.log(
     `fin. Took ${performance.now() - startTime}ms / ${

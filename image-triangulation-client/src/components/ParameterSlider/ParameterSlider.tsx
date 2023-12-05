@@ -28,7 +28,7 @@ export const ParameterSlider = ({
   onChange,
 }: Props) => {
   return (
-    <Box background="#E6FFFA" padding="1rem">
+    <Box padding="1rem">
       <Text>{name}:</Text>
       <Box display="flex" flexDirection="row" gap="2rem">
         <Slider

@@ -1,7 +1,17 @@
 "use client";
 import styles from "./page.module.css";
 import { useEffect, useState } from "react";
-import { Box, Button, Flex, Heading, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Flex,
+  Heading,
+  Text,
+} from "@chakra-ui/react";
 
 import { FileUpload } from "@/components/FileUpload/FileUpload";
 import { TriangulationStatus } from "../types";
@@ -32,14 +42,16 @@ export default function Home() {
         const response = await getTriangulationStatus(imageId);
         const responseJson = await response.json();
         const { imageStatus } = responseJson;
-        if (
-          imageStatus === TriangulationStatus.COMPLETE ||
-          imageStatus === TriangulationStatus.ERROR
-        ) {
-          setTrainagulationStatus(imageStatus);
-        } else {
-          setTriangulationProgress(responseJson.triangulationProgress);
-          setTimeout(pollServer, 5000);
+        if (imageStatus !== TriangulationStatus.NOT_STARTED) {
+          if (
+            imageStatus === TriangulationStatus.COMPLETE ||
+            imageStatus === TriangulationStatus.ERROR
+          ) {
+            setTrainagulationStatus(imageStatus);
+          } else {
+            setTriangulationProgress(responseJson.triangulationProgress);
+            setTimeout(pollServer, 5000);
+          }
         }
       }
     };
@@ -57,8 +69,8 @@ export default function Home() {
     if (imageFile) {
       const formData = new FormData();
       formData.append("image", imageFile);
-      formData.append('niblackK', niblackK.toString());
-      formData.append('blurRadius', blurRadius.toString());
+      formData.append("niblackK", niblackK.toString());
+      formData.append("blurRadius", blurRadius.toString());
       setTrainagulationStatus(TriangulationStatus.UPLOADING);
       try {
         const response = await postImage(formData);
@@ -80,34 +92,55 @@ export default function Home() {
 
   return (
     <main className={styles.appContainer}>
-      <Box width={"md"} marginX={"2rem"}>
-        <Heading>Image Triangulation</Heading>
-        {triangulationStatus === TriangulationStatus.NOT_STARTED ? (
-          <>
-            <Text>Please select a .jpg or .png image to upload.</Text>
-            <Flex width="100%" height="4rem" justifyContent="center">
-              <FileUpload
-                onChangeHandler={(event) => fileChangeHandler(event)}
+      <Flex></Flex>
+      <Card width="50%" margin="auto" colorScheme="teal">
+        <CardHeader>
+          <Heading>Image Triangulation</Heading>
+        </CardHeader>
+        <CardBody>
+          {triangulationStatus === TriangulationStatus.NOT_STARTED ? (
+            <Box background="#E6FFFA" padding="0.5rem">
+              <Text>Please select a .jpg or .png image to upload.</Text>
+              <Flex width="100%" height="4rem" justifyContent="center">
+                <FileUpload
+                  onChangeHandler={(event) => fileChangeHandler(event)}
+                />
+              </Flex>
+              <ParameterSlider
+                name="blurRadius"
+                value={blurRadius}
+                min={1}
+                max={10}
+                defaultValue={1}
+                step={1}
+                onChange={(val) => setBlurRadius(val)}
               />
-            </Flex>
-            <ParameterSlider
-              name="blurRadius"
-              value={blurRadius}
-              min={1}
-              max={10}
-              defaultValue={1}
-              step={1}
-              onChange={(val) => setBlurRadius(val)}
-            />
-            <ParameterSlider
-              name="Niblack K"
-              value={niblackK}
-              min={-2}
-              max={2}
-              defaultValue={0}
-              step={0.1}
-              onChange={(val) => setNiblackK(val)}
-            />
+              <ParameterSlider
+                name="Niblack K"
+                value={niblackK}
+                min={-2}
+                max={2}
+                defaultValue={1}
+                step={0.1}
+                onChange={(val) => setNiblackK(val)}
+              />
+            </Box>
+          ) : (
+            <>
+              {triangulationStatus !== TriangulationStatus.COMPLETE && (
+                <TriangulationProgress
+                  status={triangulationStatus}
+                  progress={triangulationProgress}
+                />
+              )}
+              {triangulationStatus === TriangulationStatus.COMPLETE && (
+                <BeforeAfterImages imageId={imageId} />
+              )}
+            </>
+          )}
+        </CardBody>
+        <CardFooter>
+          {triangulationStatus === TriangulationStatus.NOT_STARTED ? (
             <Button
               marginY="4"
               width={"100%"}
@@ -118,18 +151,7 @@ export default function Home() {
             >
               Upload
             </Button>
-          </>
-        ) : (
-          <>
-            {triangulationStatus !== TriangulationStatus.COMPLETE && (
-              <TriangulationProgress
-                status={triangulationStatus}
-                progress={triangulationProgress}
-              />
-            )}
-            {triangulationStatus === TriangulationStatus.COMPLETE && (
-              <BeforeAfterImages imageId={imageId} />
-            )}
+          ) : (
             <Button
               marginY="4"
               width={"100%"}
@@ -140,9 +162,10 @@ export default function Home() {
             >
               Reset
             </Button>
-          </>
-        )}
-      </Box>
+          )}
+        </CardFooter>
+      </Card>
+      <Box width={"md"} marginX={"2rem"}></Box>
     </main>
   );
 }

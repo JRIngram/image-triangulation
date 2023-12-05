@@ -1,5 +1,6 @@
 import { Image } from "image-js";
 import type { Vertex } from "./types";
+import { unlinkSync } from "fs";
 
 export const loadImage = async (path: string): Promise<Image> => {
   const image = await Image.load(path);
@@ -166,4 +167,12 @@ export const convertPixelGridToVerticies = (
   });
 
   return verticies;
+};
+
+export const removeProcessingPipelineImages = (id: string) => {
+  const fileDirectory = "files";
+  unlinkSync(`${fileDirectory}/${id}-blurred.png`);
+  unlinkSync(`${fileDirectory}/${id}-grey.png`);
+  unlinkSync(`${fileDirectory}/${id}-edgeDetectedImage.png`);
+  unlinkSync(`${fileDirectory}/${id}-niblackedImage.png`);
 };
