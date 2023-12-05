@@ -1,4 +1,4 @@
-import { Divider, Progress, Spinner, Text } from "@chakra-ui/react";
+import { Flex, Progress, Spinner, Text } from "@chakra-ui/react";
 import { TriangulationStatus } from "@/types";
 
 type Props = {
@@ -15,13 +15,22 @@ export const TriangulationProgress = ({ status, progress }: Props) => {
       return (
         <>
           <Text>This process may take a long time to complete.</Text>
-          <Progress
-            colorScheme="teal"
-            width={"100%"}
-            value={progress}
-            hasStripe
-            isAnimated
-          />
+          <Flex
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            border={"1px solid #2C7A7B"}
+            padding="0.5rem"
+          >
+            <Text>{progress}%</Text>
+            <Progress
+              colorScheme="teal"
+              width={"100%"}
+              value={progress}
+              hasStripe
+              isAnimated
+            />
+          </Flex>
         </>
       );
     case TriangulationStatus.COMPLETE:

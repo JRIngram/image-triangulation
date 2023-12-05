@@ -8,7 +8,7 @@ import { TriangulationStatus } from "../types";
 import { TriangulationProgress } from "@/components/TriangulationProgress/TriangulationProgress";
 import { getTriangulationStatus, postImage, triggerTriangulation } from "./api";
 import { BeforeAfterImages } from "@/components/BeforeAfterImages/BeforeAfterImages";
-// import { ParameterSlider } from "@/components/ParameterSlider/ParameterSlider";
+import { ParameterSlider } from "@/components/ParameterSlider/ParameterSlider";
 
 export default function Home() {
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -57,6 +57,8 @@ export default function Home() {
     if (imageFile) {
       const formData = new FormData();
       formData.append("image", imageFile);
+      formData.append('niblackK', niblackK.toString());
+      formData.append('blurRadius', blurRadius.toString());
       setTrainagulationStatus(TriangulationStatus.UPLOADING);
       try {
         const response = await postImage(formData);

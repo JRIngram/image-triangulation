@@ -15,6 +15,8 @@ type Image = {
   triangulatedPath: string;
   status: Status;
   triangulationProgress: number;
+  niblackK?: number,
+  blurRadius?: number,
 };
 
 export const openDb = async () => {
@@ -37,7 +39,10 @@ export const initialiseDatabase = async () => {
     originalPath TEXT NOT NUll,
     triangulatedPath TEXT,
     status TEXT NOT NULL,
-    triangulationProgress INTEGER NOT NULL)`);
+    triangulationProgress INTEGER NOT NULL,
+    niblackK INTEGER,
+    blurRadius INTEGER);
+  `);
   await db.close();
 };
 
@@ -75,6 +80,20 @@ export const getMostRecentImage = async () => {
   return latestImage;
 };
 
+export const updateTriangulationParams = async (
+  id: number,
+  niblackK: number,
+  blurRadius: number
+) => {
+  const db = await openDb();
+  await db.run(`UPDATE images SET niblackK = ?, blurRadius = ? WHERE id = ?`, [
+    niblackK,
+    blurRadius,
+    id,
+  ]);
+  db.close();
+};
+
 export const getImageById = async (imageId: string) => {
   const db = await openDb();
 
@@ -82,7 +101,8 @@ export const getImageById = async (imageId: string) => {
 
   await db.close();
 
-  const { id, originalPath, triangulatedPath, status, triangulationProgress } = res;
+  const { id, originalPath, triangulatedPath, status, triangulationProgress, niblackK, blurRadius } =
+    res;
 
   const image: Image = {
     id,
@@ -90,31 +110,49 @@ export const getImageById = async (imageId: string) => {
     triangulatedPath,
     status,
     triangulationProgress,
+    niblackK: niblackK ?? 100,
+    blurRadius: blurRadius ?? 100,
   };
 
-  return image;
+
+  return res;
 };
 
 export const updateImageStatus = async (id: string, status: Status) => {
   const db = await openDb();
   await db.run(`UPDATE images SET status = ? WHERE id = ?`, [status, id]);
   await db.close();
-}
+};
 
-export const updateImageTriangulationProgress = async (imageId: string, progress: number) => {
+export const updateImageTriangulationProgress = async (
+  imageId: string,
+  progress: number
+) => {
   const db = await openDb();
-  await db.get(`UPDATE images SET triangulationProgress = ? WHERE id = ?`, [progress, imageId]);
+  await db.get(`UPDATE images SET triangulationProgress = ? WHERE id = ?`, [
+    progress,
+    imageId,
+  ]);
   await db.close();
-}
+};
 
-export const updateImageTriangulationPath = async (imageId: string, path: string) => {
+export const updateImageTriangulationPath = async (
+  imageId: string,
+  path: string
+) => {
   const db = await openDb();
-  await db.get(`UPDATE images SET triangulatedPath = ? WHERE id = ?`, [path, imageId]);
+  await db.get(`UPDATE images SET triangulatedPath = ? WHERE id = ?`, [
+    path,
+    imageId,
+  ]);
   await db.close();
-}
+};
 
 export const updateImageToComplete = async (imageId: string) => {
   const db = await openDb();
-  await db.get(`UPDATE images SET triangulationProgress = 100, status = ? WHERE id = ?`, [Status.COMPLETE, imageId]);
+  await db.get(
+    `UPDATE images SET triangulationProgress = 100, status = ? WHERE id = ?`,
+    [Status.COMPLETE, imageId]
+  );
   await db.close();
-}
+};

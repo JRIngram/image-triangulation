@@ -10,6 +10,7 @@ import {
   updateImageStatus,
   updateImageToComplete,
   updateImageTriangulationProgress,
+  updateTriangulationParams,
 } from "./db";
 import { Worker } from "node:worker_threads";
 import path from "node:path";
@@ -41,20 +42,22 @@ app.get("/", async (req, res) => {
 
 app.post("/image", upload.single("image"), async (req, res) => {
   console.log("Image uploaded");
-  const image = await getMostRecentImage();
-  res
-    .json({ success: true, id: image.id, uploadStatus: image.status })
-    .status(200);
+  const niblackK = parseFloat(req.body.niblackK);
+  const blurRadius = parseInt(req.body.blurRadius);
+  const { id, status } = await getMostRecentImage();
+  await updateTriangulationParams(id, niblackK, blurRadius);
+  res.json({ success: true, id: id, uploadStatus: status }).status(200);
 });
 
 app.put("/image/:id", async (req, res) => {
   const id = req.params.id;
   await updateImageStatus(id, Status.PENDING);
   const image = await getImageById(id);
-  const { originalPath, status } = image;
+  const { originalPath, status, niblackK, blurRadius } = image;
+  console.log("image", { image });
 
   const worker = new Worker("./worker.ts", {
-    argv: [originalPath, id],
+    argv: [originalPath, id, niblackK, blurRadius],
     execArgv: ["--require", "ts-node/register"],
   });
 

@@ -11,14 +11,18 @@ import { updateImageTriangulationPath } from "./db";
 export const triangulateImage = async (
   id: string,
   imagePath: string,
+  niblackK: number,
+  blurRadius: number,
   updateProgressCallback: (progress: number) => Promise<void> | void
 ): Promise<void> => {
+  console.log('params', { niblackK, blurRadius})
   const startTime = performance.now();
   console.log("start");
 
   const fullPath = `files/${imagePath}`;
 
-  const thresholdedImage = await getThresholdedEdgeDetectedImage(fullPath);
+  const thresholdedImage = await getThresholdedEdgeDetectedImage(fullPath, niblackK, blurRadius);
+  console.log("thresholded: ", { thresholdedImage });
   console.log("starting triangulation");
   console.log("getting pixel grid");
   const pixelGrid = getPixelGrid(thresholdedImage);
