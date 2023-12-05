@@ -54,7 +54,6 @@ app.put("/image/:id", async (req, res) => {
   await updateImageStatus(id, Status.PENDING);
   const image = await getImageById(id);
   const { originalPath, status, niblackK, blurRadius } = image;
-  console.log("image", { image });
 
   const worker = new Worker("./worker.ts", {
     argv: [originalPath, id, niblackK, blurRadius],
@@ -78,8 +77,6 @@ app.get("/image/:id/original", async (req, res) => {
   const imageId = req.params.id;
   const image = await getImageById(imageId);
   const { originalPath } = image;
-  console.log("getting original");
-  console.log({ originalPath });
   const absolutePath = path.join(__dirname, "files", originalPath);
 
   return res.sendFile(absolutePath);
@@ -94,8 +91,6 @@ app.get("/image/:id/triangulated", async (req, res) => {
     return res.json({}).status(404);
   }
 
-  console.log("getting triangulated");
-  console.log({ triangulatedPath });
   const absolutePath = path.join(__dirname, "files", triangulatedPath);
 
   return res.sendFile(absolutePath);

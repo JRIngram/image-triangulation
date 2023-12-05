@@ -21,23 +21,30 @@ export const getPixelGrid = (image: Image): number[][][] => {
   return pixelGrid;
 };
 
-export const blurImage = async (image: Image, blurRadius: number): Promise<Image> => {
+export const blurImage = async (
+  image: Image,
+  id: string,
+  blurRadius: number
+): Promise<Image> => {
   const blurredImage = image.blurFilter({ radius: blurRadius });
-  await blurredImage.save("files/blurred.png");
+  await blurredImage.save(`files/${id}-blurred.png`);
   return blurredImage;
 };
 
-export const greyscaleImage = async (image: Image): Promise<Image> => {
+export const greyscaleImage = async (
+  image: Image,
+  id: string
+): Promise<Image> => {
   const greyImage = image.grey();
-  await greyImage.save("files/grey.png");
+  await greyImage.save(`files/${id}-grey.png`);
 
   return greyImage;
 };
 
-export const edgeDetect = async (image: Image): Promise<Image> => {
+export const edgeDetect = async (image: Image, id: string): Promise<Image> => {
   try {
     const edgeDetectedImage = image.sobelFilter();
-    await edgeDetectedImage.save("files/edgeDetectedImage.png");
+    await edgeDetectedImage.save(`files/${id}-edgeDetectedImage.png`);
     return edgeDetectedImage;
   } catch (err) {
     console.log("error during edge detection");
@@ -48,6 +55,7 @@ export const edgeDetect = async (image: Image): Promise<Image> => {
 
 export const niblackThreshold = async (
   greyscaledImage: Image,
+  id: string,
   k: number
 ): Promise<Image> => {
   const t1 = performance.now();
@@ -111,7 +119,7 @@ export const niblackThreshold = async (
     });
   });
 
-  await greyscaledImage.save("files/niblackedImage.png");
+  await greyscaledImage.save(`files/${id}-niblackedImage.png`);
   const t2 = performance.now();
   const timeTaken = t2 - t1;
   console.log(
@@ -123,15 +131,20 @@ export const niblackThreshold = async (
 };
 
 export const getThresholdedEdgeDetectedImage = async (
+  id: string,
   path: string,
   niblackK: number,
   blurRadius: number
 ): Promise<Image> => {
   const image = await loadImage(path);
-  const blurredImage = await blurImage(image, blurRadius);
-  const greyedImage = await greyscaleImage(blurredImage);
-  const edgeDetectedImage = await edgeDetect(greyedImage);
-  const thresholdedImage = await niblackThreshold(edgeDetectedImage, niblackK);
+  const blurredImage = await blurImage(image, id, blurRadius);
+  const greyedImage = await greyscaleImage(blurredImage, id);
+  const edgeDetectedImage = await edgeDetect(greyedImage, id);
+  const thresholdedImage = await niblackThreshold(
+    edgeDetectedImage,
+    id,
+    niblackK
+  );
   console.log("initial pipeline complete");
   return thresholdedImage;
 };
