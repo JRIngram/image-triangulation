@@ -23,7 +23,6 @@ export const triangulateImage = async (
   const fullPath = `files/${imagePath}`;
 
   const thresholdedImage = await getThresholdedEdgeDetectedImage(id, fullPath, niblackK, blurRadius);
-  console.log("thresholded: ", { thresholdedImage });
   console.log("starting triangulation");
   console.log("getting pixel grid");
   const pixelGrid = getPixelGrid(thresholdedImage);

@@ -113,9 +113,9 @@ export const niblackThreshold = async (
 
       // in niblack, below threshold is considered foreground
       if (pixel[0] < threshold) {
-        greyscaledImage.setPixelXY(x, y, [0, 0, 0]);
-      } else {
         greyscaledImage.setPixelXY(x, y, [255, 255, 255]);
+      } else {
+        greyscaledImage.setPixelXY(x, y, [0, 0, 0]);
       }
     });
   });
@@ -156,7 +156,7 @@ export const convertPixelGridToVerticies = (
   const verticies: Vertex[] = [];
   pixelGrid.forEach((pixelRow, y) => {
     pixelRow.forEach((pixel, x) => {
-      if (pixel[0] > 0) {
+      if (pixel[0] === 0) {
         const vertex: Vertex = {
           x,
           y,

@@ -50,7 +50,7 @@ export default function Home() {
             setTrainagulationStatus(imageStatus);
           } else {
             setTriangulationProgress(responseJson.triangulationProgress);
-            setTimeout(pollServer, 5000);
+            setTimeout(pollServer, 1000);
           }
         }
       }
@@ -108,6 +108,7 @@ export default function Home() {
               </Flex>
               <ParameterSlider
                 name="blurRadius"
+                tooltip="The size of the blur in the pre-trinagulation processing steps. A higher number leads to less triangles."
                 value={blurRadius}
                 min={1}
                 max={10}
@@ -117,6 +118,7 @@ export default function Home() {
               />
               <ParameterSlider
                 name="Niblack K"
+                tooltip="Used to calculate the threshold in the pre-trinagulation processing steps. A higher number leads to less triangles."
                 value={niblackK}
                 min={-2}
                 max={2}
