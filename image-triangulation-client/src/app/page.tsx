@@ -34,7 +34,7 @@ export default function Home() {
       triggerTriangulation(imageId);
       setTrainagulationStatus(TriangulationStatus.PENDING);
     }
-  }, [triangulationStatus]);
+  }, [triangulationStatus, imageId]);
 
   useEffect(() => {
     const pollServer = async () => {
@@ -57,7 +57,7 @@ export default function Home() {
     };
 
     pollServer();
-  }, [triangulationStatus]);
+  }, [triangulationStatus, imageId]);
 
   const fileChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -107,7 +107,7 @@ export default function Home() {
                 />
               </Flex>
               <ParameterSlider
-                name="blurRadius"
+                name="Blur Radius"
                 tooltip="The size of the blur in the pre-trinagulation processing steps. A higher number leads to less triangles."
                 value={blurRadius}
                 min={1}

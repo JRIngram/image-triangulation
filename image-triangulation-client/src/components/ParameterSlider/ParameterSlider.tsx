@@ -33,7 +33,9 @@ export const ParameterSlider = ({
   return (
     <Box padding="1rem">
       <Tooltip label={tooltip} placement="bottom-start">
-        <Text>{name} <QuestionIcon />:</Text>
+        <Text>
+          {name} <QuestionIcon />:
+        </Text>
       </Tooltip>
       <Box display="flex" flexDirection="row" gap="2rem">
         <Slider

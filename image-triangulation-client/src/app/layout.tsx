@@ -1,4 +1,4 @@
-import styles from './page.module.css'
+import styles from "./page.module.css";
 
 import React from "react";
 import { Providers } from "./providers";
