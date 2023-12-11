@@ -6,10 +6,6 @@ Image Triangulation is a webapp that "triangulates" images. It turns image from 
     <img src="./images/demo.png"  width="45%" title="An image of a babboon before being triangulated" alt="An image of a babboon before being triangulated"/>
     <img src="./images/triangulated.png" width="45%" title="An image of a babboon after being triangulated" alt="An image of a babboon after being triangulated"/>
 </div>
-<!-- 
-![An image of a babboon before being triangulated](./images/demo.png)
-
-![An image of a babboon after being triangulated](./images/triangulated.png) -->
 
 Image Triangulation has two parts, the server and the client.
 
