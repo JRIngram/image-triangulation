@@ -88,6 +88,8 @@ export default function Home() {
     setTrainagulationStatus(TriangulationStatus.NOT_STARTED);
     setImageId(-1);
     setTriangulationProgress(0);
+    setBlurRadius(1);
+    setNiblackK(1);
   };
 
   return (
