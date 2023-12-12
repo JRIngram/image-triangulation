@@ -1,5 +1,6 @@
-import { Flex, Progress, Spinner, Text } from "@chakra-ui/react";
-import { TriangulationStatus } from "@/types";
+import React from "react";
+import { Spinner, Text } from "@chakra-ui/react";
+import { TriangulationStatus } from "../..//types";
 import { TriangulationProgress } from "../TriangulationProgress/TriangulationProgress";
 
 type Props = {
@@ -11,7 +12,14 @@ export const StatusDisplay = ({ status, progress }: Props) => {
   switch (status) {
     case TriangulationStatus.UPLOADING:
     case TriangulationStatus.UPLOADED:
-      return <Spinner emptyColor="gray.200" color="teal.300" marginY="1rem" />;
+      return (
+        <Spinner
+          data-testid="loading-spinner"
+          emptyColor="gray.200"
+          color="teal.300"
+          marginY="1rem"
+        />
+      );
     case TriangulationStatus.PENDING:
       if (progress) {
         return <TriangulationProgress progress={progress} />;
