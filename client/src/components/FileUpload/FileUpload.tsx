@@ -1,3 +1,4 @@
+import React from 'react';
 import { Input } from "@chakra-ui/react";
 import { ChangeEvent } from "react";
 
@@ -8,6 +9,7 @@ type Props = {
 export const FileUpload = ({ onChangeHandler }: Props) => {
   return (
     <Input
+      aria-label='file upload input'
       variant="filled"
       type="file"
       accept=".png, .jpg, .jpeg"
