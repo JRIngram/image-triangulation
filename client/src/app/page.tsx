@@ -15,7 +15,7 @@ import {
 
 import { FileUpload } from "@/components/FileUpload/FileUpload";
 import { TriangulationStatus } from "../types";
-import { TriangulationProgress } from "@/components/TriangulationProgress/TriangulationProgress";
+import { StatusDisplay } from "@/components/StatusDisplay/StatusDisplay";
 import { getTriangulationStatus, postImage, triggerTriangulation } from "./api";
 import { BeforeAfterImages } from "@/components/BeforeAfterImages/BeforeAfterImages";
 import { ParameterSlider } from "@/components/ParameterSlider/ParameterSlider";
@@ -132,7 +132,7 @@ export default function Home() {
           ) : (
             <>
               {triangulationStatus !== TriangulationStatus.COMPLETE && (
-                <TriangulationProgress
+                <StatusDisplay
                   status={triangulationStatus}
                   progress={triangulationProgress}
                 />
