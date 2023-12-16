@@ -1,11 +1,11 @@
-import React from 'react';
+import React from "react";
 import { Flex, Progress, Text } from "@chakra-ui/react";
 
 type Props = {
   progress: number;
 };
 
-export const TriangulationProgress = ({ progress }: Props) => 
+export const TriangulationProgress = ({ progress }: Props) => (
   <>
     <Text>This process may take a long time to complete.</Text>
     <Flex
@@ -24,5 +24,5 @@ export const TriangulationProgress = ({ progress }: Props) =>
         isAnimated
       />
     </Flex>
-  </>;
-
+  </>
+);

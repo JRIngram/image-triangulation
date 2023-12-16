@@ -28,7 +28,7 @@ describe("ParameterSlider", () => {
           step={1}
           value={value}
           onChange={() => {}}
-        />
+        />,
       );
 
       const slider = screen.getByLabelText("test slider");
@@ -37,6 +37,6 @@ describe("ParameterSlider", () => {
       expect(slider).toBeVisible();
       expect(name).toBeVisible();
       expect(valueText).toBeVisible();
-    }
+    },
   );
 });

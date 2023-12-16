@@ -99,9 +99,9 @@ export default function Home() {
         <CardBody>
           {triangulationStatus === TriangulationStatus.NOT_STARTED ? (
             <Box background="#E6FFFA" padding="0.5rem">
-                <FileUpload
-                  onChangeHandler={(event) => fileChangeHandler(event)}
-                />
+              <FileUpload
+                onChangeHandler={(event) => fileChangeHandler(event)}
+              />
               <ParameterSlider
                 name="Blur Radius"
                 tooltip="The size of the blur in the pre-trinagulation processing steps. A higher number leads to less triangles."
