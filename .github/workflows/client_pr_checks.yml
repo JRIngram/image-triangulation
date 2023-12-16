@@ -1,0 +1,90 @@
+name: "Client PR Checks"
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  set-up:
+    runs-on: "ubuntu-latest"
+    defaults:
+      run:
+        working-directory: ./client
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: set-up node
+        uses: actions/setup-node@v3
+      - name: install
+        run: npm i
+      - name: client-cache
+        uses: actions/cache@v3
+        with:
+          key: client-cache-${{ hashFiles('**/package-lock.json') }}
+          path: |
+            **/node_modules
+
+  lint:
+    runs-on: "ubuntu-latest"
+    needs: set-up
+    defaults:
+      run:
+        working-directory: ./client
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: restore-cache
+        uses: actions/cache@v3
+        with:
+          key: client-cache-${{ hashFiles('**/package-lock.json') }}
+          path: |
+            **/node_modules
+      - name: install node_modules
+        if: steps.restore-cache.outputs.cache-hit != 'true'
+        run: npm i
+      - name: lint
+        run: npm run lint
+  
+  unit-test:
+    runs-on: "ubuntu-latest"
+    needs: set-up
+    defaults:
+      run:
+        working-directory: ./client
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: restore-cache
+        uses: actions/cache@v3
+        with:
+          key: client-cache-${{ hashFiles('**/package-lock.json') }}
+          path: |
+            **/node_modules
+      - name: install node_modules
+        if: steps.restore-cache.outputs.cache-hit != 'true'
+        run: npm i
+      - name: test
+        run: npm run test
+
+  build:
+    runs-on: "ubuntu-latest"
+    needs: [unit-test, lint]
+    defaults:
+      run:
+        working-directory: ./client
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: restore-cache
+        uses: actions/cache@v3
+        with:
+          key: client-cache-${{ hashFiles('**/package-lock.json') }}
+          path: |
+            **/node_modules
+      - name: install node_modules
+        if: steps.restore-cache.outputs.cache-hit != 'true'
+        run: npm i
+      - name: build
+        run: npm run build
+  

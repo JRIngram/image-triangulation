@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Slider,
   SliderTrack,
@@ -6,11 +7,11 @@ import {
   Text,
   Box,
   Tooltip,
+  Flex,
 } from "@chakra-ui/react";
 import { QuestionIcon } from "@chakra-ui/icons";
 
 type Props = {
-  defaultValue: number;
   max: number;
   min: number;
   name: string;
@@ -21,7 +22,6 @@ type Props = {
 };
 
 export const ParameterSlider = ({
-  defaultValue,
   max,
   min,
   name,
@@ -32,15 +32,15 @@ export const ParameterSlider = ({
 }: Props) => {
   return (
     <Box padding="1rem">
-      <Tooltip label={tooltip} placement="bottom-start">
-        <Text>
-          {name} <QuestionIcon />:
-        </Text>
+      <Tooltip data-testid="tooltip" label={tooltip} placement="bottom-start">
+        <Flex direction="row" gap="0.25rem" alignItems="center">
+          <Text>{name}</Text> <QuestionIcon data-testid="question-icon" />:
+        </Flex>
       </Tooltip>
       <Box display="flex" flexDirection="row" gap="2rem">
         <Slider
-          aria-label={`${name}-slider`}
-          defaultValue={defaultValue}
+          aria-label={`${name} slider`}
+          defaultValue={value}
           min={min}
           max={max}
           colorScheme="teal"
