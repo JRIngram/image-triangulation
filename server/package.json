@@ -6,7 +6,8 @@
   "scripts": {
     "reset": "echo \"Clearing DB and files\" && rm tmp/database.db && rm -r files/*",
     "start": "npx ts-node index.ts",
-    "lint": "npx eslint *.ts --fix",
+    "lint": "npx eslint *.ts",
+    "lint:fix": "npx eslint *.ts --fix",
     "tsc": "npx tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
