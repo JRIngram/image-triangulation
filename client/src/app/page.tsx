@@ -1,5 +1,5 @@
 "use client";
-import styles from "./page.module.css";
+import React from "react";
 import { useEffect, useState } from "react";
 import {
   Box,
@@ -8,17 +8,15 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
-  Flex,
   Heading,
-  Text,
 } from "@chakra-ui/react";
-
-import { FileUpload } from "@/components/FileUpload/FileUpload";
-import { TriangulationStatus } from "../types";
-import { StatusDisplay } from "@/components/StatusDisplay/StatusDisplay";
 import { getTriangulationStatus, postImage, triggerTriangulation } from "./api";
-import { BeforeAfterImages } from "@/components/BeforeAfterImages/BeforeAfterImages";
-import { ParameterSlider } from "@/components/ParameterSlider/ParameterSlider";
+
+import { FileUpload } from "../components/FileUpload/FileUpload";
+import { TriangulationStatus } from "../types";
+import { StatusDisplay } from "../components/StatusDisplay/StatusDisplay";
+import { BeforeAfterImages } from "../components/BeforeAfterImages/BeforeAfterImages";
+import { ParameterSlider } from "../components/ParameterSlider/ParameterSlider";
 
 export default function Home() {
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -93,8 +91,7 @@ export default function Home() {
   };
 
   return (
-    <main className={styles.appContainer}>
-      <Flex></Flex>
+    <main>
       <Card width="50%" margin="auto" colorScheme="teal">
         <CardHeader>
           <Heading>Image Triangulation</Heading>
@@ -102,19 +99,15 @@ export default function Home() {
         <CardBody>
           {triangulationStatus === TriangulationStatus.NOT_STARTED ? (
             <Box background="#E6FFFA" padding="0.5rem">
-              <Text>Please select a .jpg or .png image to upload.</Text>
-              <Flex width="100%" height="4rem" justifyContent="center">
                 <FileUpload
                   onChangeHandler={(event) => fileChangeHandler(event)}
                 />
-              </Flex>
               <ParameterSlider
                 name="Blur Radius"
                 tooltip="The size of the blur in the pre-trinagulation processing steps. A higher number leads to less triangles."
                 value={blurRadius}
                 min={1}
                 max={10}
-                defaultValue={1}
                 step={1}
                 onChange={(val) => setBlurRadius(val)}
               />
@@ -124,7 +117,6 @@ export default function Home() {
                 value={niblackK}
                 min={-2}
                 max={2}
-                defaultValue={1}
                 step={0.1}
                 onChange={(val) => setNiblackK(val)}
               />
