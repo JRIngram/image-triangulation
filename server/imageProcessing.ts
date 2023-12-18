@@ -1,6 +1,7 @@
 import { Image } from 'image-js'
 import type { Vertex } from './types'
 import { unlinkSync } from 'fs'
+import { FILES_DIRECTORY } from './config'
 
 export const loadImage = async (path: string): Promise<Image> => {
     const image = await Image.load(path)
@@ -28,7 +29,7 @@ export const blurImage = async (
     blurRadius: number
 ): Promise<Image> => {
     const blurredImage = image.blurFilter({ radius: blurRadius })
-    await blurredImage.save(`files/${id}-blurred.png`)
+    await blurredImage.save(`${FILES_DIRECTORY}/${id}-blurred.png`)
     return blurredImage
 }
 
@@ -37,7 +38,7 @@ export const greyscaleImage = async (
     id: string
 ): Promise<Image> => {
     const greyImage = image.grey()
-    await greyImage.save(`files/${id}-grey.png`)
+    await greyImage.save(`${FILES_DIRECTORY}/${id}-grey.png`)
 
     return greyImage
 }
@@ -45,7 +46,7 @@ export const greyscaleImage = async (
 export const edgeDetect = async (image: Image, id: string): Promise<Image> => {
     try {
         const edgeDetectedImage = image.sobelFilter()
-        await edgeDetectedImage.save(`files/${id}-edgeDetectedImage.png`)
+        await edgeDetectedImage.save(`${FILES_DIRECTORY}/${id}-edgeDetectedImage.png`)
         return edgeDetectedImage
     } catch (err) {
         console.log('error during edge detection')
@@ -120,7 +121,7 @@ export const niblackThreshold = async (
         })
     })
 
-    await greyscaledImage.save(`files/${id}-niblackedImage.png`)
+    await greyscaledImage.save(`${FILES_DIRECTORY}/${id}-niblackedImage.png`)
     const t2 = performance.now()
     const timeTaken = t2 - t1
     console.log(
@@ -170,9 +171,8 @@ export const convertPixelGridToVerticies = (
 }
 
 export const removeProcessingPipelineImages = (id: string): void => {
-    const fileDirectory = 'files'
-    unlinkSync(`${fileDirectory}/${id}-blurred.png`)
-    unlinkSync(`${fileDirectory}/${id}-grey.png`)
-    unlinkSync(`${fileDirectory}/${id}-edgeDetectedImage.png`)
-    unlinkSync(`${fileDirectory}/${id}-niblackedImage.png`)
+    unlinkSync(`${FILES_DIRECTORY}/${id}-blurred.png`)
+    unlinkSync(`${FILES_DIRECTORY}/${id}-grey.png`)
+    unlinkSync(`${FILES_DIRECTORY}/${id}-edgeDetectedImage.png`)
+    unlinkSync(`${FILES_DIRECTORY}/${id}-niblackedImage.png`)
 }

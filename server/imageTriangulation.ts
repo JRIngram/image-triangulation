@@ -8,6 +8,7 @@ import {
 } from './imageProcessing'
 import type { Vertex, Pixel, PixelInTriangle } from './types'
 import { updateImageTriangulationPath } from './db'
+import { FILES_DIRECTORY } from './config'
 
 export const triangulateImage = async (
     id: string,
@@ -20,7 +21,7 @@ export const triangulateImage = async (
     const startTime = performance.now()
     console.log('start')
 
-    const fullPath = `files/${imagePath}`
+    const fullPath = `${FILES_DIRECTORY}/${imagePath}`
 
     const thresholdedImage = await getThresholdedEdgeDetectedImage(id, fullPath, niblackK, blurRadius)
     console.log('starting triangulation')
@@ -139,7 +140,7 @@ export const triangulateImage = async (
     })
 
     const triangulationPath = `${id}-triangulated.png`
-    await originalImage.save(`files/${triangulationPath}`)
+    await originalImage.save(`${FILES_DIRECTORY}/${triangulationPath}`)
     await updateImageTriangulationPath(id, triangulationPath)
     removeProcessingPipelineImages(id)
 

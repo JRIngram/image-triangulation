@@ -14,6 +14,7 @@ import {
 } from './db'
 import { Worker } from 'node:worker_threads'
 import path from 'node:path'
+import { FILES_DIRECTORY } from './config'
 
 const app = express()
 const port = 3001
@@ -30,7 +31,7 @@ initialiseDatabase()
     })
 
 const storage = multer.diskStorage({
-    destination: 'files/',
+    destination: `${FILES_DIRECTORY}`,
     filename: async (req, file, callback) => {
         const path = `${Date.now()}-${file.originalname}`
         callback(null, path)
@@ -83,7 +84,7 @@ app.get('/image/:id/original', async (req, res) => {
     const imageId = req.params.id
     const image = await getImageById(imageId)
     const { originalPath } = image
-    const absolutePath = path.join(__dirname, 'files', originalPath)
+    const absolutePath = path.join(__dirname, `${FILES_DIRECTORY}`, originalPath)
 
     res.sendFile(absolutePath)
 })
@@ -97,7 +98,7 @@ app.get('/image/:id/triangulated', async (req, res) => {
         return res.json({}).status(404)
     }
 
-    const absolutePath = path.join(__dirname, 'files', triangulatedPath)
+    const absolutePath = path.join(__dirname, `${FILES_DIRECTORY}`, triangulatedPath)
 
     res.sendFile(absolutePath)
 })
