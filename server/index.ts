@@ -1,6 +1,9 @@
 import express from 'express'
 import cors from 'cors'
 import multer from 'multer'
+import { Worker } from 'node:worker_threads'
+import path from 'node:path'
+import { FILES_DIRECTORY } from './src/config'
 import {
     Status,
     getImageById,
@@ -12,9 +15,6 @@ import {
     updateImageTriangulationProgress,
     updateTriangulationParams
 } from './src/db'
-import { Worker } from 'node:worker_threads'
-import path from 'node:path'
-import { FILES_DIRECTORY } from './src/config'
 
 const app = express()
 const port = 3001
