@@ -1,5 +1,6 @@
-import type { Edge, Vertex } from './types'
-import { Triangle } from './types'
+import type { Vertex } from './types/types'
+import { Edge } from './types/Edge'
+import { Triangle } from './types/Triangle'
 
 const createSupertriangle = (vertices: Vertex[]): Triangle => {
     let minX = 0

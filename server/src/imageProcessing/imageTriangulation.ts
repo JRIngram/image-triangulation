@@ -1,4 +1,4 @@
-import { bowyerWatson } from './triangulation'
+import { bowyerWatson } from '../triangulation'
 import {
     getThresholdedEdgeDetectedImage,
     getPixelGrid,
@@ -6,9 +6,9 @@ import {
     loadImage,
     removeProcessingPipelineImages
 } from './imageProcessing'
-import type { Vertex, Pixel, PixelInTriangle } from './types'
-import { updateImageTriangulationPath } from './db'
-import { FILES_DIRECTORY } from './config'
+import type { Vertex, Pixel, PixelInTriangle } from '../types/types'
+import { updateImageTriangulationPath } from '../db'
+import { FILES_DIRECTORY } from '../config'
 
 export const triangulateImage = async (
     id: string,
@@ -141,7 +141,9 @@ export const triangulateImage = async (
 
     const triangulationPath = `${id}-triangulated.png`
     await originalImage.save(`${FILES_DIRECTORY}/${triangulationPath}`)
+    console.log('saved')
     await updateImageTriangulationPath(id, triangulationPath)
+    console.log('updated')
     removeProcessingPipelineImages(id)
 
     console.log(

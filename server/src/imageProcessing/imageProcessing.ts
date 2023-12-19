@@ -1,7 +1,7 @@
 import { Image } from 'image-js'
-import type { Vertex } from './types'
+import type { Vertex } from '../types/types'
 import { unlinkSync } from 'fs'
-import { FILES_DIRECTORY } from './config'
+import { FILES_DIRECTORY } from '../config'
 
 export const loadImage = async (path: string): Promise<Image> => {
     const image = await Image.load(path)

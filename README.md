@@ -34,7 +34,7 @@ npm run start
 
 To install dependencies for the server, change to the `server` directory and run `npm i`.
 
-Then run `npm run start`.
+Then run `npm run start` from the `server` directory.
 
 Upon running an SQLite database is creted in the `server/tmp/` directory. Images that are uploaded to the server are stored within `server/file`. Do not remove images from the files directory.
 

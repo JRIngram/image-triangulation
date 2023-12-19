@@ -21,7 +21,7 @@ interface Image {
 
 export const openDb = async (): Promise<Database<sqlite3.Database, sqlite3.Statement>> => {
     return await open<sqlite3.Database, sqlite3.Statement>({
-        filename: 'tmp/database.db',
+        filename: './tmp/database.db',
         driver: sqlite3.Database
     })
 }

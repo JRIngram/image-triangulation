@@ -1,4 +1,4 @@
-import { triangulateImage } from './imageTriangulation'
+import { triangulateImage } from './imageProcessing/imageTriangulation'
 //
 import { parentPort } from 'node:worker_threads'
 

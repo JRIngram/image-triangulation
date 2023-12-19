@@ -11,10 +11,10 @@ import {
     updateImageToComplete,
     updateImageTriangulationProgress,
     updateTriangulationParams
-} from './db'
+} from './src/db'
 import { Worker } from 'node:worker_threads'
 import path from 'node:path'
-import { FILES_DIRECTORY } from './config'
+import { FILES_DIRECTORY } from './src/config'
 
 const app = express()
 const port = 3001
@@ -62,7 +62,7 @@ app.put('/image/:id', async (req, res) => {
     const image = await getImageById(id)
     const { originalPath, status, niblackK, blurRadius } = image
 
-    const worker = new Worker('./worker.ts', {
+    const worker = new Worker('./src/worker.ts', {
         argv: [originalPath, id, niblackK, blurRadius],
         execArgv: ['--require', 'ts-node/register']
     })
