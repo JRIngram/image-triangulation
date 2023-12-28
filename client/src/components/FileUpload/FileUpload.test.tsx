@@ -9,7 +9,7 @@ describe("FileUpload", () => {
     render(<FileUpload onChangeHandler={() => {}} />);
     const fileUpload = screen.getByLabelText("file upload input");
     const label = screen.getByText(
-      "Please select a .jpg or .png image to upload:"
+      "Please select a .jpg or .png image to upload:",
     );
     expect(fileUpload).toBeVisible();
     expect(label).toBeVisible();

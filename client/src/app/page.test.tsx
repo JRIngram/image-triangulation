@@ -1,5 +1,5 @@
 import React from "react";
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 
 import Home from "./page";
@@ -14,7 +14,7 @@ describe("Home Page", () => {
   });
 
   afterAll(() => {
-    vi.resetAllMocks()
+    vi.resetAllMocks();
   });
 
   it("renders default home page", () => {
