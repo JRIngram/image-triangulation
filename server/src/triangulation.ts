@@ -1,5 +1,6 @@
-import type { Edge, Vertex } from './types'
-import { Triangle } from './types'
+import type { Vertex } from './types/types'
+import { Edge } from './types/Edge'
+import { Triangle } from './types/Triangle'
 
 const createSupertriangle = (vertices: Vertex[]): Triangle => {
     let minX = 0
@@ -28,7 +29,7 @@ export const bowyerWatson = (pointList: Vertex[]): Triangle[] => {
     let triangulation: Triangle[] = [supertriangle]
 
     pointList.forEach((point, pointIndex) => {
-        if(pointIndex % 100 === 0){
+        if (pointIndex % 100 === 0) {
             console.log(`point ${pointIndex} of ${pointList.length}`)
         }
         const badTriangles: Triangle[] = [] // a set of bad triangles
