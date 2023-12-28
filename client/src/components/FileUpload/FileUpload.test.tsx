@@ -1,4 +1,5 @@
 import React from "react";
+import { describe, it, expect, vi } from "vitest";
 import { userEvent } from "@testing-library/user-event";
 import { render, screen } from "@testing-library/react";
 import { FileUpload } from "./FileUpload";
@@ -14,8 +15,8 @@ describe("FileUpload", () => {
     expect(label).toBeVisible();
   });
 
-  it("Triggers handler when user uploads a file", async () => {
-    const spy = jest.fn();
+  it("Triggers vi when user uploads a file", async () => {
+    const spy = vi.fn();
     render(<FileUpload onChangeHandler={() => spy()} />);
     const fileUpload = screen.getByLabelText("file upload input");
     const mockFile: File = new File(["test"], "test.png", {

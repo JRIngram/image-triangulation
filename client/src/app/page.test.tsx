@@ -1,19 +1,20 @@
 import React from "react";
+import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 
 import Home from "./page";
 
 describe("Home Page", () => {
   beforeAll(() => {
-    global.ResizeObserver = jest.fn().mockImplementation(() => ({
-      observe: jest.fn(),
-      unobserve: jest.fn(),
-      disconnect: jest.fn(),
+    global.ResizeObserver = vi.fn().mockImplementation(() => ({
+      observe: vi.fn(),
+      unobserve: vi.fn(),
+      disconnect: vi.fn(),
     }));
   });
 
   afterAll(() => {
-    jest.clearAllMocks();
+    vi.resetAllMocks();
   });
 
   it("renders default home page", () => {
