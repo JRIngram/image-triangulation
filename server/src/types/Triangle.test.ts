@@ -47,56 +47,56 @@ describe("Triangle", () => {
     });
   });
 
-  describe('areTrianglesEqual', () => {
-    it('returns true if triangles are equal', () => {
-        const a: Vertex = { x: -3, y: 0 };
-        const b: Vertex = { x: 0, y: 3 };
-        const c: Vertex = { x: 3, y: 0 };
-        const triangleOne = new Triangle(a, b, c);
-        const triangleTwo = new Triangle(a, b, c);
-        expect(triangleOne.areTrianglesEqual(triangleTwo)).toEqual(true)
-    })
+  describe("areTrianglesEqual", () => {
+    it("returns true if triangles are equal", () => {
+      const a: Vertex = { x: -3, y: 0 };
+      const b: Vertex = { x: 0, y: 3 };
+      const c: Vertex = { x: 3, y: 0 };
+      const triangleOne = new Triangle(a, b, c);
+      const triangleTwo = new Triangle(a, b, c);
+      expect(triangleOne.areTrianglesEqual(triangleTwo)).toEqual(true);
+    });
 
-    it('returns false if triangles are not equal', () => {
-        const a: Vertex = { x: -3, y: 0 };
-        const b: Vertex = { x: 0, y: 3 };
-        const c: Vertex = { x: 3, y: 0 };
-        const d: Vertex = { x: 0, y : 0};
-        const triangleOne = new Triangle(a, b, c);
-        const triangleTwo = new Triangle(a, b, d);
-        expect(triangleOne.areTrianglesEqual(triangleTwo)).toEqual(false)
-    })
+    it("returns false if triangles are not equal", () => {
+      const a: Vertex = { x: -3, y: 0 };
+      const b: Vertex = { x: 0, y: 3 };
+      const c: Vertex = { x: 3, y: 0 };
+      const d: Vertex = { x: 0, y: 0 };
+      const triangleOne = new Triangle(a, b, c);
+      const triangleTwo = new Triangle(a, b, d);
+      expect(triangleOne.areTrianglesEqual(triangleTwo)).toEqual(false);
+    });
   });
 
-  describe('pointLiesWithinTriangle', () => {
-    it('returns true if point lies within triangle', () => {
-        const a: Vertex = { x: -3, y: 0 };
-        const b: Vertex = { x: 0, y: 3 };
-        const c: Vertex = { x: 3, y: 0 };
-        const d: Vertex = { x: 0, y : 0};
-        const triangle = new Triangle(a, b, c);
-        const expected = true;
+  describe("pointLiesWithinTriangle", () => {
+    it("returns true if point lies within triangle", () => {
+      const a: Vertex = { x: -3, y: 0 };
+      const b: Vertex = { x: 0, y: 3 };
+      const c: Vertex = { x: 3, y: 0 };
+      const d: Vertex = { x: 0, y: 0 };
+      const triangle = new Triangle(a, b, c);
+      const expected = true;
 
-        const actual = triangle.pointLiesWithinTriangle(d);
+      const actual = triangle.pointLiesWithinTriangle(d);
 
-        expect(actual).toEqual(expected);
-    })
+      expect(actual).toEqual(expected);
+    });
 
-    it('returns false if point lies within triangle', () => {
-        const a: Vertex = { x: -3, y: 0 };
-        const b: Vertex = { x: 0, y: 3 };
-        const c: Vertex = { x: 3, y: 0 };
-        const d: Vertex = { x: 10, y : 10};
-        const triangle = new Triangle(a, b, c);
-        const expected = false;
+    it("returns false if point lies within triangle", () => {
+      const a: Vertex = { x: -3, y: 0 };
+      const b: Vertex = { x: 0, y: 3 };
+      const c: Vertex = { x: 3, y: 0 };
+      const d: Vertex = { x: 10, y: 10 };
+      const triangle = new Triangle(a, b, c);
+      const expected = false;
 
-        const actual = triangle.pointLiesWithinTriangle(d);
+      const actual = triangle.pointLiesWithinTriangle(d);
 
-        expect(actual).toEqual(expected);
-    })
-  })
+      expect(actual).toEqual(expected);
+    });
+  });
 
-  it('get triangle edges', () => {
+  it("get triangle edges", () => {
     const a: Vertex = { x: -3, y: 0 };
     const b: Vertex = { x: 0, y: 3 };
     const c: Vertex = { x: 3, y: 0 };
@@ -107,17 +107,16 @@ describe("Triangle", () => {
     const expectedEdges = [ab, bc, ca];
 
     const edges = triangle.getTriangleEdges();
-    expect(edges).toEqual(expectedEdges)
-
+    expect(edges).toEqual(expectedEdges);
   });
 
-  it('getTriangleArea', () => {
+  it("getTriangleArea", () => {
     const a: Vertex = { x: -3, y: 0 };
     const b: Vertex = { x: 0, y: 3 };
     const c: Vertex = { x: 3, y: 0 };
     const triangle = new Triangle(a, b, c);
     const expected = 9;
-    const actual = triangle.getTriangleArea()
+    const actual = triangle.getTriangleArea();
     expect(actual).toEqual(expected);
   });
 });
